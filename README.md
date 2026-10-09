@@ -127,4 +127,4 @@ Python · Streamlit · pandas · matplotlib · MySQL · pytest
 
 Author
 
-Sourabh Singh — LinkedIn · GitHub
+Sourabh Singh — [LinkedIn](https://www.linkedin.com/in/sourabh-singh-7b1249434/?isSelfProfile=true) · [GitHub](https://github.com/CodeXSourabhsingh)
