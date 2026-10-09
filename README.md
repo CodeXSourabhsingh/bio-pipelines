@@ -17,11 +17,9 @@ Every run logs to MySQL (`hematology_reports`) with a timestamp for audit trail.
 
 ---
 
-
 ```markdown
 **Sources:** WHO Hemoglobin Concentrations (2023), Tietz Clinical Chemistry (adult reference ranges), ACOG guidelines for Rh sensitization and anti-D prophylaxis.
 ```
-
 
 ## How it's built — the four-layer ladder
 
@@ -55,7 +53,6 @@ Ranges are adult-only. Pediatric and neonatal ranges differ.
 
 - **10 pytest tests** cover all Rh combinations, blood-group edge cases, and CBC boundary values (`test_hema.py`).
 - **Rh logic** validated against ACOG guidelines (mother Rh−, baby Rh+, sensitized → HDFN risk; unsensitized first pregnancy → monitor, anti-D prophylaxis at 28 weeks).
-
 - **Boundary checks** hit exact threshold values (Hb 13.5 for male, 12.0 for female) to catch `<` vs `≤` bugs.
 
 Run:
@@ -77,22 +74,27 @@ Output:
 · Platelets: Normal (inside 150–450)
 · Rh status: Monitor — first pregnancy, no antibodies yet
 
-Clinical interpretation: the CBC panel flags anemia in a pre-menopausal female, which in practice triggers iron studies and a GI workup. The Rh status is not yet sensitized, which matches the standard recommendation for anti-D prophylaxis at 28 weeks in an Rh-negative mother carrying an Rh-positive fetus.
-
-The tool flags. The physician decides.
+Clinical interpretation: the CBC panel flags anemia in a pre-menopausal female, which in practice triggers iron studies and a GI workup. The Rh status is not yet sensitized, which matches the standard clinical pathway for an unsensitized first pregnancy. The tool flags. The physician decides.
 
 ---
 
-Limitations
+## Limitations
 
-· Adult ranges only. Pediatric and neonatal CBC ranges differ significantly.
-· "Normal" means "in reference range," not "healthy." A chronically anemic patient at 12.5 g/dL may be normal for them and still require attention.
-· Flags, does not diagnose. HEMA-CORE surfaces abnormal values and risk tiers. It does not replace clinical judgment.
-· No unit conversion. Inputs must be in the stated units (g/dL for Hb, ×10⁹/L for WBC and platelets, mg/L)
+- **Adult ranges only.** Pediatric and neonatal CBC ranges differ significantly from adult values.
+
+- **"Normal" means "in reference range," not "healthy."** A chronically anemic patient at 12.5 g/dL may be normal for them and still require clinical attention.
+
+- **Flags, does not diagnose.** HEMA-CORE surfaces abnormal values and risk tiers. It does not replace clinical judgment. Every output is a flag for further review, not a diagnosis.
+
+- **Unit handling covers g/dL ↔ g/L for Hb, and /µL ↔ 10⁹/L for WBC and platelets.** Raw inputs are stored alongside their units in MySQL for audit. Glucose unit conversion is handled separately in METABO-CORE.
+
+- **No age stratification.** Reference ranges do not vary by patient age. A 20-year-old and a 75-year-old receive the same thresholds.
+
+- **Rh logic covers the two-outcome case.** It returns "high risk" or "monitor" — it does not model anti-D dosing, sensitization history from prior miscarriages or transfusions, or partial D variants.
 
 ---
 
-Run locally
+## Run locally
 
 ```bash
 git clone [GITHUB_URL]
@@ -109,7 +111,7 @@ python -m pytest test_hema.py -v
 
 ---
 
-Project structure
+## Project structure
 
 ```
 HEMA-CORE.py            Streamlit app
@@ -124,12 +126,12 @@ requirements.txt
 
 ---
 
-Stack
+## Stack
 
 Python · Streamlit · pandas · matplotlib · MySQL · pytest
 
 ---
 
-Author
+## Author
 
 Sourabh Singh — [LinkedIn](https://www.linkedin.com/in/sourabh-singh-7b1249434/?isSelfProfile=true) · [GitHub](https://github.com/CodeXSourabhsingh)
