@@ -24,6 +24,13 @@ def rh_check(mother_rh, baby_rh, pregnancy_num):
 
 
 st.title('HEMA-CORE')
+st.markdown(
+    """
+    Project links:
+    - [GitHub README](https://github.com/CodeXSourabhsingh/bio-pipelines/blob/main/HEMA-CORE%20README.md)
+    - [Live App](https://bio-pipelines-qezfegldg3wrnbzc9mx65y.streamlit.app/)
+    """
+)
 
 sex = st.selectbox("Sex", ['M', 'F'])
 blood_group = st.selectbox("Blood Group", ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])
