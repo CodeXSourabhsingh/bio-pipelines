@@ -4,6 +4,7 @@ import streamlit as st
 from Blood_V2 import Blood_group
 from Blood_CBC_V2 import CBC_Analyzer
 import mysql.connector
+
 try:
     MYSQL_HOST = st.secrets["MYSQL_HOST"]
     MYSQL_USER = st.secrets["MYSQL_USER"]
@@ -11,6 +12,7 @@ try:
     MYSQL_DATABASE = st.secrets["MYSQL_DATABASE"]
 except Exception:
     from config import MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE
+
 
 def rh_check(mother_rh, baby_rh, pregnancy_num):
     if mother_rh == '-' and baby_rh == '+':
@@ -51,6 +53,7 @@ baby_rh = st.selectbox('Baby Rh', ('+', '-'))
 pregnancy_num = st.selectbox('Pregnancy number', ('1', '2', '3', '4+'))
 
 if st.button('Run'):
+
     hb_val = hb
     if hb_unit == "g/L":
         hb_val = hb / 10
@@ -72,54 +75,51 @@ if st.button('Run'):
     receive_list = bg.can_receive_from()
 
     rh_result = rh_check(mother_rh, baby_rh, pregnancy_num)
-try:
-    conn = mysql.connector.connect(
-        host=MYSQL_HOST, user=MYSQL_USER,
-        password=MYSQL_PASSWORD, database=MYSQL_DATABASE,
-        connection_timeout=3
-    )
-    cursor = conn.cursor()
-    ...
-    conn.commit()
-    cursor.close()
-    conn.close()
-except Exception as e:
-    st.warning(f"DB logging skipped: {e}")
-   
 
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS hematology_reports (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            sex VARCHAR(1),
-            blood_group VARCHAR(3),
-            hb FLOAT, hb_unit VARCHAR(10), hb_label VARCHAR(60),
-            wbc FLOAT, wbc_unit VARCHAR(10), wbc_label VARCHAR(60),
-            platelets FLOAT, plt_unit VARCHAR(10), platelets_label VARCHAR(60),
-            mother_rh VARCHAR(1),
-            baby_rh VARCHAR(1),
-            pregnancy_num VARCHAR(2),
-            rh_result VARCHAR(60)
+    db_status = None
+    try:
+        conn = mysql.connector.connect(
+            host=MYSQL_HOST, user=MYSQL_USER,
+            password=MYSQL_PASSWORD, database=MYSQL_DATABASE,
+            connection_timeout=3
         )
-    """)
+        cursor = conn.cursor()
 
-    insert_sql = """INSERT INTO hematology_reports
-        (sex, blood_group,
-         hb, hb_unit, hb_label,
-         wbc, wbc_unit, wbc_label,
-         platelets, plt_unit, platelets_label,
-         mother_rh, baby_rh, pregnancy_num, rh_result)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS hematology_reports (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                sex VARCHAR(1),
+                blood_group VARCHAR(3),
+                hb FLOAT, hb_unit VARCHAR(10), hb_label VARCHAR(60),
+                wbc FLOAT, wbc_unit VARCHAR(10), wbc_label VARCHAR(60),
+                platelets FLOAT, plt_unit VARCHAR(10), platelets_label VARCHAR(60),
+                mother_rh VARCHAR(1),
+                baby_rh VARCHAR(1),
+                pregnancy_num VARCHAR(2),
+                rh_result VARCHAR(60)
+            )
+        """)
 
-    cursor.execute(insert_sql, (
-        sex, blood_group,
-        hb, hb_unit, hb_label,
-        wbc, wbc_unit, wbc_label,
-        platelets, plt_unit, platelets_label,
-        mother_rh, baby_rh, pregnancy_num, rh_result
-    ))
-    conn.commit()
-    cursor.close()
-    conn.close()
+        insert_sql = """INSERT INTO hematology_reports
+            (sex, blood_group,
+             hb, hb_unit, hb_label,
+             wbc, wbc_unit, wbc_label,
+             platelets, plt_unit, platelets_label,
+             mother_rh, baby_rh, pregnancy_num, rh_result)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+
+        cursor.execute(insert_sql, (
+            sex, blood_group,
+            hb, hb_unit, hb_label,
+            wbc, wbc_unit, wbc_label,
+            platelets, plt_unit, platelets_label,
+            mother_rh, baby_rh, pregnancy_num, rh_result
+        ))
+        conn.commit()
+        cursor.close()
+        conn.close()
+    except Exception as e:
+        db_status = f"DB logging skipped: {e}"
 
     st.write(f"*Blood group:* {blood_group}")
     st.write(f"*Can receive from:* {receive_list}")
@@ -159,3 +159,6 @@ except Exception as e:
 
     plt.tight_layout()
     st.pyplot(fig)
+
+    if db_status:
+        st.caption(db_status)
