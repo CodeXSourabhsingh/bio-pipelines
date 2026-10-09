@@ -72,8 +72,7 @@ if st.button('Run'):
     receive_list = bg.can_receive_from()
 
     rh_result = rh_check(mother_rh, baby_rh, pregnancy_num)
-
-    try:
+try:
     conn = mysql.connector.connect(
         host=MYSQL_HOST, user=MYSQL_USER,
         password=MYSQL_PASSWORD, database=MYSQL_DATABASE,
@@ -86,12 +85,7 @@ if st.button('Run'):
     conn.close()
 except Exception as e:
     st.warning(f"DB logging skipped: {e}")
-
-    conn = mysql.connector.connect(
-        host=MYSQL_HOST, user=MYSQL_USER,
-        password=MYSQL_PASSWORD, database=MYSQL_DATABASE
-    )
-    cursor = conn.cursor()
+   
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS hematology_reports (
