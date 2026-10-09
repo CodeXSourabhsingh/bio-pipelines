@@ -78,11 +78,11 @@ Input: Female, blood group B−, Hb 10.10 g/dL, WBC 7.00 ×10⁹/L, Platelets 18
 
 Output:
 
-· Blood compatibility: can receive from B− and O− only
-· Hb: Anemia (below female range 12.0–15.5)
-· WBC: Normal (inside 4.0–11.0)
-· Platelets: Normal (inside 150–450)
-· Rh status: Monitor — first pregnancy, no antibodies yet
+- Blood compatibility: can receive from B− and O− only
+- Hb: Anemia (below female range 12.0–15.5)
+- WBC: Normal (inside 4.0–11.0)
+- Platelets: Normal (inside 150–450)
+- Rh status: Monitor — first pregnancy, no antibodies yet
 
 Clinical interpretation: the CBC panel flags anemia in a pre-menopausal female, which in practice triggers iron studies and a GI workup. The Rh status is not yet sensitized, which matches the standard monitoring approach for an unsensitized first pregnancy.
 
@@ -102,8 +102,8 @@ Clinical interpretation: the CBC panel flags anemia in a pre-menopausal female, 
 ## Run locally
 
 ```bash
-git clone [GITHUB_URL]
-cd [REPO_NAME]
+git clone https://github.com/CodeXSourabhsingh/bio-pipelines
+cd bio-pipelines
 pip install -r requirements.txt
 streamlit run HEMA-CORE.py
 ```
