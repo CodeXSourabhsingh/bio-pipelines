@@ -88,7 +88,7 @@ Limitations
 · Adult ranges only. Pediatric and neonatal CBC ranges differ significantly.
 · "Normal" means "in reference range," not "healthy." A chronically anemic patient at 12.5 g/dL may be normal for them and still require attention.
 · Flags, does not diagnose. HEMA-CORE surfaces abnormal values and risk tiers. It does not replace clinical judgment.
-· No unit conversion. Inputs must be in the stated units (g/dL for Hb, ×10⁹/L for WBC and platelets, mg/L for anything from METABO-CORE).
+· No unit conversion. Inputs must be in the stated units (g/dL for Hb, ×10⁹/L for WBC and platelets, mg/L)
 
 ---
 
