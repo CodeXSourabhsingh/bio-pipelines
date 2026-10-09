@@ -2,7 +2,7 @@
 
 A unified hematology pipeline — blood compatibility, CBC interpretation, and Rh-pregnancy risk in one Streamlit dashboard, backed by MySQL.
 
-**Live app:** [STREAMLIT_URL]
+**Live app:** [https://bio-pipelines-qezfegldg3wrnbzc9mx65y.streamlit.app/]
 
 ---
 
