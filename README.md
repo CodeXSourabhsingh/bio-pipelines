@@ -54,9 +54,7 @@ Ranges are adult-only. Pediatric and neonatal ranges differ.
 ## Validation
 
 - **10 pytest tests** cover all Rh combinations, blood-group edge cases, and CBC boundary values (`test_hema.py`).
-- **Rh logic** validated against standard obstetric practice — mother Rh−, baby Rh+, sensitized → HDFN risk; unsensitized first pregnancy → monitor.
-
--**Rh logic* validated against ACOG guidelines (mother Rh−, baby Rh+, sensitized → HDFN risk; unsensitized first pregnancy → monitor, anti-D prophylaxis at 28 weeks).
+- **Rh logic** validated against ACOG guidelines (mother Rh−, baby Rh+, sensitized → HDFN risk; unsensitized first pregnancy → monitor, anti-D prophylaxis at 28 weeks).
 
 - **Boundary checks** hit exact threshold values (Hb 13.5 for male, 12.0 for female) to catch `<` vs `≤` bugs.
 
