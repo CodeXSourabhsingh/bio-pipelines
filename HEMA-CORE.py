@@ -5,7 +5,13 @@ from Blood_V2 import Blood_group
 from Blood_CBC_V2 import CBC_Analyzer
 import mysql.connector
 from config import MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE
-
+try:
+    MYSQL_HOST = st.secrets["MYSQL_HOST"]
+    MYSQL_USER = st.secrets["MYSQL_USER"]
+    MYSQL_PASSWORD = st.secrets["MYSQL_PASSWORD"]
+    MYSQL_DATABASE = st.secrets["MYSQL_DATABASE"]
+except Exception:
+    from config import MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE
 
 def rh_check(mother_rh, baby_rh, pregnancy_num):
     if mother_rh == '-' and baby_rh == '+':
