@@ -73,6 +73,20 @@ if st.button('Run'):
 
     rh_result = rh_check(mother_rh, baby_rh, pregnancy_num)
 
+    try:
+    conn = mysql.connector.connect(
+        host=MYSQL_HOST, user=MYSQL_USER,
+        password=MYSQL_PASSWORD, database=MYSQL_DATABASE,
+        connection_timeout=3
+    )
+    cursor = conn.cursor()
+    ...
+    conn.commit()
+    cursor.close()
+    conn.close()
+except Exception as e:
+    st.warning(f"DB logging skipped: {e}")
+
     conn = mysql.connector.connect(
         host=MYSQL_HOST, user=MYSQL_USER,
         password=MYSQL_PASSWORD, database=MYSQL_DATABASE
