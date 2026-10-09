@@ -17,6 +17,12 @@ Every run logs to MySQL (`hematology_reports`) with a timestamp for audit trail.
 
 ---
 
+
+```markdown
+**Sources:** WHO Hemoglobin Concentrations (2023), Tietz Clinical Chemistry (adult reference ranges), ACOG guidelines for Rh sensitization and anti-D prophylaxis.
+```
+
+
 ## How it's built — the four-layer ladder
 
 Each subsystem was built four times, same logic, escalating complexity:
@@ -49,6 +55,9 @@ Ranges are adult-only. Pediatric and neonatal ranges differ.
 
 - **10 pytest tests** cover all Rh combinations, blood-group edge cases, and CBC boundary values (`test_hema.py`).
 - **Rh logic** validated against standard obstetric practice — mother Rh−, baby Rh+, sensitized → HDFN risk; unsensitized first pregnancy → monitor.
+
+-**Rh logic* validated against ACOG guidelines (mother Rh−, baby Rh+, sensitized → HDFN risk; unsensitized first pregnancy → monitor, anti-D prophylaxis at 28 weeks).
+
 - **Boundary checks** hit exact threshold values (Hb 13.5 for male, 12.0 for female) to catch `<` vs `≤` bugs.
 
 Run:
