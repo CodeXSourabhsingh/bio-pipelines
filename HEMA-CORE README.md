@@ -12,7 +12,7 @@ HEMA-CORE merges three clinical tools into one interface:
 
 1. **Blood compatibility** — given a recipient's ABO+Rh type, returns the donor types they can safely receive from.
 2. **CBC interpreter** — given hemoglobin, WBC, and platelet counts, returns Low / Normal / High with disease labels (Anemia, Polycythemia, Leukopenia, Leukocytosis, Thrombocytopenia, Thrombocytosis, etc.).
-3. **Rh-pregnancy risk** — given the mother's Rh status, baby's Rh status, and pregnancy number, returns a risk tier and clinical recommendation.
+3. **Rh-pregnancy risk** — given the mother's Rh status, baby's Rh status, and pregnancy number, returns a risk tier and educational context.
 
 Every run logs to MySQL (`hematology_reports`) with a timestamp for an audit trail.
 
@@ -24,7 +24,7 @@ Every run logs to MySQL (`hematology_reports`) with a timestamp for an audit tra
 
 ## Why this project exists
 
-HEMA-CORE was built to combine three common hematology workflows in a single, easy-to-use interface. Instead of checking blood compatibility, CBC interpretation, and Rh-pregnancy risk separately, a clinician or student can use one app to review all three in a single workflow.
+HEMA-CORE was built to combine three common hematology workflows in a single, easy-to-use interface. Instead of checking blood compatibility, CBC interpretation, and Rh-pregnancy risk separately, users can evaluate all three in one dashboard.
 
 This project is useful as a decision-support and learning tool, but it should be treated as a flagging aid rather than a diagnostic system.
 
@@ -82,9 +82,9 @@ Output:
 - Hb: Anemia (below female range 12.0–15.5)
 - WBC: Normal (inside 4.0–11.0)
 - Platelets: Normal (inside 150–450)
-- Rh status: Monitor — first pregnancy, no antibodies yet
+- Rh status: Flag — first pregnancy, no antibodies yet. Discuss prophylaxis timing with your OB.
 
-Clinical interpretation: the CBC panel flags anemia in a pre-menopausal female, which in practice triggers iron studies and a GI workup. The Rh status is not yet sensitized, which matches the standard monitoring approach for an unsensitized first pregnancy.
+Clinical interpretation: the CBC panel flags anemia in a pre-menopausal female, which in practice triggers iron studies and a GI workup. The Rh status is not yet sensitized, which matches the standard educational guidance for a first pregnancy in an Rh-negative mother with an Rh-positive fetus.
 
 ---
 
