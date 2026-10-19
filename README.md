@@ -28,7 +28,7 @@ Python · Streamlit · pandas · matplotlib · MySQL · pytest
 ## Repository Status
 
 - **HEMA-CORE:** Active and tested
-- **METABO-CORE:** In development
+- **METABO-CORE:** Active and tested
 
 ## Getting Started
 
