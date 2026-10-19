@@ -1,156 +1,121 @@
-# METABO-CORE
+# METABO‑CORE
 
-**A unified clinical pipeline for metabolic risk assessment and pharmacokinetic dose estimation, built with Streamlit and MySQL.**
+**A unified clinical pipeline for metabolic risk assessment and pharmacokinetic dose estimation.**
+
+Streamlit · MySQL · Python
 
 Live demo: <LIVE_URL_PLACEHOLDER>  
-GitHub: <GITHUB_REPO_PLACEHOLDER>
+Repo: <GITHUB_REPO_PLACEHOLDER>
 
 ---
 
-## Table of Contents
+## Summary
 
-- [What it does](#what-it-does)
-- [Quick features](#quick-features)
-- [Architecture (The Four-Layer Ladder)](#architecture-the-four-layer-ladder)
-- [Validation & Testing](#validation--testing)
-- [Clinical reference ranges & formulas](#clinical-reference-ranges--formulas)
-- [Data logging & schema](#data-logging--schema)
-- [Limitations](#limitations)
-- [Tech stack](#tech-stack)
-- [Run locally](#run-locally)
-- [How AI was used](#how-ai-was-used)
-- [License & Contributing](#license--contributing)
+METABO‑CORE combines two clinician‑facing calculators into a single, auditable Streamlit dashboard:
+
+- Metabolic risk (glucose): classifies fasting and 2‑hour post‑meal glucose into **Normal**, **PreDiabetic**, or **Diabetic** and visualizes values on a clinical range band.
+- Pharmacokinetics (PK): computes **Vd**, **Loading Dose**, **Maintenance Dose**, and **Steady‑State** time from patient weight, drug half‑life, and target concentration, and plots an exponential decay curve.
+
+All runs are recorded to a single MySQL table (`metabo_core_results`) for audit and downstream analytics.
 
 ---
 
-## What it does
+## Highlights
 
-METABO-CORE merges two clinical tools into a single, human-in-the-loop interface:
-
-1. **Metabolic Risk (Glucose)**
-   - Evaluates fasting and post-meal glucose values and classifies risk tier: **Normal**, **PreDiabetic**, or **Diabetic**.
-   - Displays the patient’s measurements on a visual range band to show where the readings fall against published clinical thresholds.
-
-2. **Pharmacokinetics (PK)**
-   - Calculates **Volume of Distribution (Vd)**, **Loading Dose**, **Maintenance Dose**, and **Steady State** time based on patient weight, drug half-life, and target plasma concentration.
-   - Renders an exponential decay curve showing drug clearance over time and highlights the target concentration line.
-
-Every run is logged into MySQL to a single, discriminated table: **metabo_core_results**.
+- Two‑tab Streamlit UI (Glucose | PK)
+- Unified MySQL logging with a `type` discriminator (glucose / pk)
+- Clear, auditable calculations and visualizations
+- Human‑in‑the‑loop: flags and estimates; does not prescribe
 
 ---
 
-## Quick features
+## What it does (concise)
 
-- Two-tab Streamlit dashboard (Glucose + PK)
-- Unified logging to MySQL with a single result table and a `type` discriminator
-- Visual analytics for glucose clinical range bands and PK decay curves
-- Standard PK calculations grounded in clinically recognized formulas
-- Human-in-the-loop decision support: flags and calculates, but does not prescribe
+1. Metabolic Risk (Glucose)
+   - Inputs: fasting glucose, 2‑hour post‑meal glucose
+   - Output: risk tier (Normal / PreDiabetic / Diabetic)
+   - Visualization: range band showing patient position vs thresholds
+
+2. Pharmacokinetics (PK)
+   - Inputs: drug name, patient weight, half‑life, target concentration
+   - Outputs: Vd, elimination constant (k), Clearance (CL), Loading Dose, Maintenance Dose, estimated steady state
+   - Visualization: exponential concentration decay with target line and steady‑state marker
 
 ---
 
-## Architecture (The Four-Layer Ladder)
+## Architecture — The Four‑Layer Ladder
 
-METABO-CORE follows a progressive architecture model that reflects the project’s evolution:
+- **V1:** Dict + if/else (prototype logic)
+- **V2:** Class + methods (encapsulated clinical logic)
+- **V3:** CSV → validate → transform → MySQL (ETL)
+- **V4:** Streamlit UI (delivery)
 
-| Layer | Description |
-|---|---|
-| **V1** | Dict + if/else logic for rapid prototyping |
-| **V2** | Class-based logic with state and behavior encapsulation |
-| **V3** | CSV → validate → transform → MySQL ETL pipeline |
-| **V4** | Streamlit UI as the user-facing delivery layer |
-
-**METABO-CORE** brings together the V2 logic from both clinical arcs into a two-tab Streamlit dashboard and stores all results in a single MySQL table using a `type` column to distinguish record types such as `glucose` and `pk`.
+METABO‑CORE integrates the V2 logic of both clinical arcs into a two‑tab Streamlit dashboard and persists results in a discriminated MySQL table (`type` column).
 
 ---
 
 ## Validation & Testing
 
-- **15 pytest tests** cover the complete logic engine.
-- **Glucose tests** verify boundary conditions, including exact thresholds for **PreDiabetic** vs **Diabetic** for both fasting and post-meal glucose.
-- **PK tests** verify the mathematical formulas, including **Warfarin** and **Digoxin** calculations against hand-calculated expected values.
-- **Hierarchy rule tests** explicitly confirm that if either glucose value is diabetic, the final result is diabetic.
-
-This test suite is designed to validate both edge cases and standard clinical input patterns.
+- **15 pytest tests** verify the core engine.
+  - Glucose boundary tests validate exact thresholds for fasting and post‑meal categories.
+  - PK tests validate formulas and example drugs (Warfarin, Digoxin) against hand‑calculated results.
+  - Hierarchy rule: if either fasting or post‑meal is Diabetic → final label is Diabetic.
 
 ---
 
 ## Clinical reference ranges & formulas
 
-### Glucose — ADA / WHO thresholds
+Glucose (ADA / WHO):
 
-| Metric | Normal | PreDiabetic | Diabetic |
-|---|---|---|---|
-| **Fasting glucose** | < 100 mg/dL | 100–125 mg/dL | ≥ 126 mg/dL |
-| **Post-meal glucose (2h)** | < 140 mg/dL | 140–199 mg/dL | ≥ 200 mg/dL |
+| Measure | Normal | PreDiabetic | Diabetic |
+|---|---:|---:|---:|
+| Fasting | < 100 mg/dL | 100–125 mg/dL | ≥ 126 mg/dL |
+| 2‑hr post‑meal | < 140 mg/dL | 140–199 mg/dL | ≥ 200 mg/dL |
 
-> Final glucose classification follows the **worst (highest-risk)** of the two values. If either reading is diabetic, the patient is classified as **Diabetic**.
+PK equations (used by the tool):
 
-### Pharmacokinetics (standard equations)
+- Vd = weight × Vd_per_kg
+- k = ln(2) / half_life
+- CL = k × Vd
+- Loading dose = Vd × target_concentration
+- Maintenance rate = CL × target_concentration
+- Maintenance dose per interval = Maintenance rate × dosing_interval (default 12h)
+- Steady state ≈ 4× half_life (practical estimate)
 
-- **Vd = weight × Vd_per_kg**
-- **k = ln(2) / half-life**
-- **CL = k × Vd**
-- **Loading dose = Vd × target_concentration**
-- **Maintenance dose = CL × target_concentration**
-- **Steady state ≈ 4–5 × half-life**
-
-This tool is intended for **clinical flagging and decision support**. It does not prescribe therapy.
+Note: METABO‑CORE performs calculations for decision support and does not issue prescriptions.
 
 ---
 
-## Data logging & schema
+## Data model (summary)
 
-All runs are recorded to the MySQL table **metabo_core_results** as a single unified dataset with a discriminating `type` column.
+All runs are logged to `metabo_core_results` with fields such as:
 
-| Column | Type | Notes |
-|---|---|---|
-| `id` | INT (PK) | Auto-generated row identifier |
-| `created_at` | DATETIME | Timestamp of the run |
-| `type` | ENUM('glucose', 'pk') | Result category discriminator |
-| `fasting_glucose` | FLOAT | Fasting value in mg/dL |
-| `post_meal_glucose` | FLOAT | Post-meal value in mg/dL |
-| `glucose_risk` | VARCHAR | Final glucose classification |
-| `drug` | VARCHAR | Drug name for PK calculations |
-| `weight_kg` | FLOAT | Patient body weight |
-| `half_life_h` | FLOAT | Drug half-life in hours |
-| `target_conc` | FLOAT | Target concentration |
-| `vd_l` | FLOAT | Calculated Vd |
-| `loading_dose_mg` | FLOAT | Calculated loading dose |
-| `maintenance_dose_mg` | FLOAT | Calculated maintenance dose |
-| `steady_state_h` | FLOAT | Estimated steady-state time |
-| `payload_json` | JSON | Full record for audit and reproducibility |
-| `user_id` | VARCHAR | Optional clinician or session identifier |
+- id, created_at, type (`glucose` | `pk`)
+- fasting_glucose, post_meal_glucose, glucose_risk
+- drug, weight_kg, half_life_h, target_conc
+- vd_l, loading_dose_mg, maintenance_dose_mg, steady_state_h
+- payload_json (inputs + outputs), user_id
 
-This unified logging model simplifies auditing, comparisons across clinical runs, and future integration work.
+This single, discriminated table simplifies audit trails and analytics.
 
 ---
 
 ## Limitations
 
-- **Adult glucose ranges only**: the current logic is not validated for pediatric or pregnancy-specific thresholds.
-- **No organ-system modeling**: the PK module is purely mathematical and does not account for renal, hepatic, or cardiac impairment.
-- **Maintenance dosing assumption**: the PK tool uses standard **12-hour dosing intervals** for the maintenance dose calculation.
-- **Decision-support only**: the application is designed to **flag and estimate**, not to prescribe therapy.
+- Adult glucose reference ranges only (no pediatric or pregnancy ranges).
+- PK calculations are mathematical models only — organ dysfunction and interactions are not modeled.
+- Maintenance dose calculations assume a 12‑hour dosing interval unless configured otherwise.
+- Intended for clinical decision support (flagging/estimation), not for autonomous prescribing.
 
 ---
 
-## Tech Stack
+## Tech stack
 
-| Category | Tools |
-|---|---|
-| **Core** | Python |
-| **UI** | Streamlit |
-| **Data processing** | pandas, numpy |
-| **Visualization** | matplotlib |
-| **Database** | MySQL |
-| **Testing** | pytest |
+Python · Streamlit · pandas · numpy · matplotlib · MySQL · pytest
 
 ---
 
 ## Run locally
-
-Clone the repository and run the application locally:
 
 ```bash
 git clone https://github.com/CodeXSourabhsingh/bio-pipelines.git
@@ -159,9 +124,7 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
-### Local configuration
-
-If your environment requires MySQL connectivity, set the relevant database variables before starting the app:
+Environment variables (example):
 
 ```bash
 export METABO_CORE_DB_HOST=localhost
@@ -171,19 +134,21 @@ export METABO_CORE_DB_PASSWORD=your_password
 export METABO_CORE_DB_NAME=metabo_core
 ```
 
+For quick local testing, you can substitute MySQL with an in‑memory CSV or SQLite fixture.
+
 ---
 
 ## How AI was used
 
-AI was used as a coding partner for syntax, scaffolding, and boilerplate generation. The architecture, clinical logic routing, boundary testing, and user experience design were directed and reviewed by the developer. AI accelerated implementation without replacing domain logic or engineering judgment.
+AI assisted with syntax, scaffolding, and boilerplate. All clinical logic, architecture decisions, testing, and UI design were developer‑directed and validated.
 
 ---
 
-## License & Contributing
+## License & contributing
 
-- **License**: TODO — add the appropriate open-source license for the project (for example, MIT or Apache-2.0).
-- **Contributing**: Contributions are welcome. Please keep changes scoped, document new logic clearly, and include tests for any new mathematical or clinical behavior.
+- License: TODO — add a license (MIT / Apache‑2.0 recommended)
+- Contributions: welcome — please include tests for any new logic and follow repository contribution guidelines.
 
 ---
 
-This project is designed to support **clinical interpretation and decision support** using structured logic, transparent calculations, and auditable logging.
+If you want, I will commit this landing‑page‑style README to the `main` branch now.
