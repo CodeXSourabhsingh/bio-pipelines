@@ -144,11 +144,10 @@ AI assisted with syntax, scaffolding, and boilerplate. All clinical logic, archi
 
 ---
 
-## License & contributing
+## Author
 
-- License: TODO — add a license (MIT / Apache‑2.0 recommended)
-- Contributions: welcome — please include tests for any new logic and follow repository contribution guidelines.
+Sourabh Singh — [LinkedIn] · [GitHub] · [Architecture Notebook]
 
 ---
 
-If you want, I will commit this landing‑page‑style README to the `main` branch now.
+If you want further edits, tell me what to change.
