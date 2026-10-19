@@ -5,7 +5,6 @@
 Streamlit · MySQL · Python
 
 Live demo: <LIVE_URL_PLACEHOLDER>  
-Repo: <GITHUB_REPO_PLACEHOLDER>
 
 ---
 
