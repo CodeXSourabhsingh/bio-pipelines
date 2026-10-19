@@ -4,7 +4,11 @@ import numpy as np
 import mysql.connector
 from Glucose_Diabetes_risk_V2 import GD_risk
 from Pharmacokinetics_dosage_tracker_V2 import PK_Dosage
-from config import MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE
+
+try:
+    from config import MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE
+except ImportError:
+    MYSQL_HOST = None
 
 st.set_page_config(page_title="METABO-CORE", layout="centered")
 
@@ -12,6 +16,9 @@ st.title("METABO-CORE")
 st.write("Metabolic risk assessment and pharmacokinetic dose estimation in one interface.")
 
 def write_row(row):
+    if not MYSQL_HOST:
+        return False
+        
     try:
         conn = mysql.connector.connect(
             host=MYSQL_HOST, user=MYSQL_USER,
