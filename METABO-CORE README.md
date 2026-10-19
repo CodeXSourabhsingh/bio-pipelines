@@ -4,7 +4,7 @@
 
 Streamlit · MySQL · Python
 
-Live demo: <LIVE_URL_PLACEHOLDER>  
+Live demo: https://bio-pipelines-pjwgahrykqtd8evcqcfrnm.streamlit.app/  
 
 ---
 
@@ -145,7 +145,8 @@ AI assisted with syntax, scaffolding, and boilerplate. All clinical logic, archi
 
 ## Author
 
-Sourabh Singh 
+Sourabh Singh
 
 ---
 
+If you want further edits, tell me what to change.
