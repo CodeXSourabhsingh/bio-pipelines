@@ -146,8 +146,7 @@ AI assisted with syntax, scaffolding, and boilerplate. All clinical logic, archi
 
 ## Author
 
-Sourabh Singh — [LinkedIn] · [GitHub] · [Architecture Notebook]
+Sourabh Singh 
 
 ---
 
-If you want further edits, tell me what to change.
