@@ -169,3 +169,9 @@ with tab2:
         })
         if not ok:
             st.caption("DB logging skipped.")
+
+st.divider()
+st.caption("⚠️ **DISCLAIMER:** This tool is for educational and clinical decision support purposes only.")
+st.caption("It is NOT a substitute for professional medical advice, diagnosis, or treatment.")
+st.caption("All outputs, calculations, and triage recommendations must be independently verified by a qualified healthcare provider.")
+st.caption("Do not prescribe or make clinical decisions based solely on this software.")
