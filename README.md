@@ -6,8 +6,8 @@ This repository brings together focused projects exploring clinical interpretati
 
 ## Projects
 
-- **[HEMA-CORE README](https://github.com/CodeXSourabhsingh/bio-pipelines/blob/main/HEMA-CORE%20README.md)** — Unified hematology pipeline for blood compatibility analysis, CBC interpretation, and clinical reporting.
-- **[METABO-CORE README](https://github.com/CodeXSourabhsingh/bio-pipelines/blob/main/METABO-CORE%20README.md)** — Integrated metabolic and pharmacokinetic analysis pipeline. Currently under development and focused on metabolite analysis combined with drug exposure modeling.
+- **[HEMA-CORE README](https://github.com/CodeXSourabhsingh/bio-pipelines/blob/main/HEMA-CORE%20README.md)** — Unified hematology pipeline for blood compatibility analysis, CBC interpretation, and clinical decision support.
+- **[METABO-CORE README](https://github.com/CodeXSourabhsingh/bio-pipelines/blob/main/METABO-CORE%20README.md)** — Integrated metabolic and pharmacokinetic analysis pipeline. Currently under development.
 
 ## Live Demo
 
@@ -29,6 +29,10 @@ Python · Streamlit · pandas · matplotlib · MySQL · pytest
 
 - **HEMA-CORE:** Active and tested
 - **METABO-CORE:** Active and tested
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
 
 ## Getting Started
 
